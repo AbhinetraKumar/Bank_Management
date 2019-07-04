@@ -1,0 +1,326 @@
+import pymysql
+
+
+class Start:
+    def enter(self):
+        t = True
+        while t:
+            print('Enter 0 to LOGIN \n Enter 1 to register \n Enter 2 to exit \n')
+            i = int(input("Enter the choice\n"))
+            if i == 1:
+                r = register()
+                r.reg()
+            elif i == 0:
+                l = login()
+                l.log()
+            else:
+                print("Exited")
+                t = False
+
+
+class register:
+    def reg(self):
+        ssn1 = input("Enter the ssn\n")
+        name1 = input("Enter the name\n")
+        password1 = input("Enter the password\n")
+        phno1 = input("Enter the phone no\n")
+        db = pymysql.connect(user='root', password='', host='localhost', database='bank')
+        cursor = db.cursor()
+        cursor.execute('insert into register values("%s","%s","%s","%s")' % (ssn1, name1, password1, phno1))
+        db.commit()
+        print("\nregistered")
+        db.close()
+
+
+class login:
+    def log(self):
+        ssn1 = input("Enter the ssn\n")
+        password1 = input("Enter the password\n")
+        db = pymysql.connect(user='root', password='', host='localhost', database='bank')
+        cursor = db.cursor()
+        cursor.execute("select * from register where ssn1='" + ssn1 + "' and password1='" + password1 + "'")
+        data = cursor.fetchall()
+        if not data:
+            print("\n!!!Invlaid details")
+
+        else:
+            e = enter1()
+            e.ent()
+        db.commit()
+        db.close()
+
+
+class enter1:
+    def ent(self):
+        t = True
+        while t:
+            print("\n Enter 0 to enter the new student details \n Enter 1 to display details of student \n Enter 2 to display all students details \n Enter 3 to delete student details \n Enter 4 to delete all students details \n Enter 5 to update the values \n Enter 6 to exit \n ")
+            i = int(input("Enter your choice\n"))
+            if i == 0:
+                s1 = set()
+                s1.setdata()
+            elif i == 1:
+                d = display()
+                d.show()
+            elif i == 2:
+                all = showall()
+                all.show()
+            elif i == 3:
+                d1 = delete()
+                d1.del1()
+            elif i == 4:
+                d2 = deleteall()
+                d2.del2()
+            elif i == 5:
+                u = update()
+                u.up()
+            elif i == 6:
+                print
+                "Exited"
+                t = False
+            else:
+                print("!!!INVALID OPTION")
+
+
+class showall:
+    def show(self):
+        db = pymysql.connect(user='root', password='', host='localhost', database='bank')
+        cursor = db.cursor()
+        cursor.execute("select usn,nam,sem,branch,phno,sub1,m1,sub2,m2,sub3,m3  from details")
+        data = cursor.fetchall()
+        if not data:
+            print("\n!!!No data")
+
+        else:
+            print("\nThe details are:")
+
+            for row in data:
+
+                print("\nUsn = %s" % row[0])
+
+                print("Name = %s" % row[1])
+
+                print("Sem = %s" % row[2])
+
+                print("Branch = %s" % row[3])
+
+                print("Phone no. = %s" % row[4])
+
+                print("Subjectcode = Marks -> Result")
+
+                print("-----------------------------------")
+
+                if int(row[6]) >= 50:
+                    print(row[5], " = ", row[6], " --> Pass")
+
+                else:
+                    print(row[5], " = ", row[6], " --> Fail")
+
+                if int(row[8]) >= 50:
+                    print(row[7], " = ", row[8], " --> Pass")
+
+                else:
+                    print(row[7], " = ", row[8], " --> Fail")
+
+                if int(row[10]) >= 50:
+                    print(row[9], " = ", row[10], " --> Pass")
+
+                else:
+                    print(row[9], " = ", row[10], " --> Fail")
+
+        db.commit()
+        db.close()
+
+
+class display:
+    def show(self):
+        regno = input("Enter usn:\n")
+        db = pymysql.connect(user='root', password='', host='localhost', database='bank')
+        cursor = db.cursor()
+        cursor.execute("select usn,nam,sem,branch,phno,sub1,m1,sub2,m2,sub3,m3 from details where usn='%s'" % regno)
+        data = cursor.fetchall()
+        if not data:
+            print("\n!!!Invalid USN")
+
+        else:
+            print("\nThe deatils:")
+
+            for row in data:
+
+                print("\nUsn = %s" % row[0])
+
+                print("Name = %s" % row[1])
+
+                print("Sem = %s" % row[2])
+
+                print("Branch = %s" % row[3])
+
+                print("Phone no. = %s" % row[4])
+
+                print("Subjectcode = Marks -> Result")
+
+                print("-----------------------------------")
+
+                if int(row[6]) >= 50:
+                    print(row[5], " = ", row[6], " --> Pass")
+
+                else:
+                    print(row[5], " = ", row[6], " --> Fail")
+
+                if int(row[8]) >= 50:
+                    print(row[7], " = ", row[8], " --> Pass")
+
+                else:
+                    print(row[7], " = ", row[8], " --> Fail")
+
+                if int(row[10]) >= 50:
+                    print(row[9], " = ", row[10], " --> Pass")
+
+                else:
+                    print(row[9], " = ", row[10], " --> Fail")
+
+        db.commit()
+        db.close()
+
+
+class set:
+    def setdata(self):
+        db = pymysql.connect(user='root', password='', host='localhost', database='bank')
+        cursor = db.cursor()
+        try:
+            print("Enter the details of student:\n")
+
+            usn = input("Enter the usn\n")
+            nam = input("Enter the name\n")
+            sem = input("Enter the sem\n")
+            branch = input("Enter tne branch\n")
+            phno = input("Enter the phone no.\n")
+            sub1 = input("Enter the subjectcode 1\n")
+            m1 = int(input("Enter the marks of subcode 1\n"))
+            sub2 = input("Enter the subjectcode 2\n")
+            m2 = int(input("Enter the marks of subcode 2\n"))
+            sub3 = input("Enter the subjectcode 3\n")
+            m3 = int(input("Enter the marks of subcode 3\n"))
+            cursor.execute('insert into details values("%s","%s","%s","%s","%s","%s","%d","%s","%d","%s","%d")' % (
+                usn, nam, sem, branch, phno, sub1, m1, sub2, m2, sub3, m3))
+            print("\nInserted")
+            db.commit()
+        except:
+            print("\ninvalid")
+
+            db.rollback()
+        db.close()
+
+
+class delete():
+    def del1(self):
+        db = pymysql.connect(user='root', password='', host='localhost', database='bank')
+        cursor = db.cursor()
+        usn = input("Enter the usn of student whose details has to deleted\n")
+        try:
+            cursor.execute("select * from details where usn='%s'" % usn)
+            data = cursor.fetchall()
+            if not data:
+                print("!!!INVALID USN")
+
+            else:
+                cursor.execute("delete from details where usn='%s'" % usn)
+                db.commit()
+                print("\nDeleted")
+
+        except:
+            print("\n!!!INVALID")
+
+            db.rollback()
+        db.close()
+
+
+class deleteall:
+    def del2(self):
+        db = pymysql.connect(user='root', password='', host='localhost', database='bank')
+        cursor = db.cursor()
+        try:
+            cursor.execute("delete from details")
+            db.commit()
+            print("\nDeleted")
+
+        except:
+            print("\n!!!Cannot delete")
+
+            db.rollback()
+        db.close()
+
+
+class update:
+    def up(self):
+        db = pymysql.connect(user='root', password='', host='localhost', database='bank')
+        cursor = db.cursor()
+        try:
+            usn = input("\nEnter the student usn to update values \n")
+            cursor.execute("select * from details where usn='%s'" % usn)
+            data = cursor.fetchall()
+            if not data:
+                print("\n usn not available \n")
+
+            else:
+                nam = input("Enter the name\n")
+                sem = input("Enter the sem\n")
+                branch = input("Enter the branch\n")
+                phno = input("Enter the phone no.\n")
+                sub1 = input("Enter the subjectcode 1\n")
+                m1 = int(input("Enter the marks of subcode 1\n"))
+                sub2 = input("Enter the subjectcode 2\n")
+                m2 = int(input("Enter the marks of subcode 2\n"))
+                sub3 = input("Enter the subjectcode 3\n")
+                m3 = int(input("Enter the marks of subcode 3\n"))
+                cursor.execute("update details set nam='%s',sem='%s',branch='%s',phno='%s',sub1='%s',m1='%d',sub2='%s',m2='%d',sub3='%s',m3='%d' where usn='%s'" % (
+                        nam, sem, branch, phno, sub1, m1, sub2, m2, sub3, m3, usn))
+                db.commit()
+                print("\nUpdated details are:")
+
+                cursor.execute("select usn,nam,sem,branch,phno,sub1,m1,sub2,m2,sub3,m3  from details where usn='%s'" % usn)
+                data = cursor.fetchall()
+                for row in data:
+
+                    print("\nusn = %s" % row[0])
+
+                    print("Name = %s" % row[1])
+
+                    print("Sem = %s" % row[2])
+
+                    print("Branch = %s" % row[3])
+
+                    print("Phone no. = %s" % row[4])
+
+                    print("Subjectcode = Marks -> Result")
+
+                    print("-----------------------------------")
+
+                    if int(row[6]) >= 50:
+                        print(row[5], " = ", row[6], " --> Pass")
+
+                    else:
+                        print(row[5], " = ", row[6], " --> Fail")
+
+                    if int(row[8]) >= 50:
+                        print(row[7], " = ", row[8], " --> Pass")
+
+                    else:
+                        print(row[7], " = ", row[8], " --> Fail")
+
+                    if int(row[10]) >= 50:
+                        print(row[9], " = ", row[10], " --> Pass")
+
+                    else:
+                        print(row[9], " = ", row[10], " --> Fail")
+
+        except:
+            print("\n!!!INVALID \n")
+
+            db.rollback()
+        db.close()
+
+
+s = Start()
+s.enter()
+
